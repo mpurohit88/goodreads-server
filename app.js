@@ -20,4 +20,7 @@ app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.listen(3000);
+var port = process.env.PORT || 3000;
+
+app.set('port', port);
+app.listen(port);
