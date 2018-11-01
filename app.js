@@ -1,26 +1,25 @@
 const express = require('express');
 const path = require('path');
-const axios = require('axios');
 const app = express();
-const goodreadsapi = require('./config');
+const getBooks = require('./index').getBooks;
+const getBookDetails = require('./index').getBookDetails;
+
 
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('/api/search', function(req, res) {
-    axios('https://www.goodreads.com/search/index.xml?key='+ goodreadsapi.key +'&q=' + req.query.q, {
-        method: 'GET',
-    }).then(result => {
-        res.send(result.data);
-    })
-    .catch(err => console.log(err));
+    getBooks(req.query.q).then( books => res.send(books));
+});
+
+app.get('/api/getDetails', function(req, res) {
+  getBookDetails(req.query.q).then( books => res.send(books));
 });
   
-
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3001;
 
 app.set('port', port);
 app.listen(port);
